@@ -8,7 +8,7 @@ def getRandCharFromSet(set):
 D = [100, 10000, 100000, 1000000]
 E = [20, 50, 80]
 charsets = ["ABCDEFGHIJKLMNOPQRSTUVWXYZ", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"]
-nCasesPerCombo = 150
+nCasesPerCombo = 20
 
 outputFormat = "{}_{}_{}.dat"
 lineFormat = "{} {}\n"
@@ -34,7 +34,7 @@ for d in D:
                 while (j < len(s2)):
                     roll = randint(1, 100)
                     if (roll <= e):
-                        stalin = randint(1, 10)
+                        stalin = randint(1, 20)
                         if stalin == 10:
                             s2 = s2[:j]+s2[j+1:]
                         else:
@@ -43,6 +43,8 @@ for d in D:
                                 charTo = getRandCharFromSet(charsets[setPos])
                             s2 =s2[:j]+charTo+s2[j+1:]
                             j += 1
+                    else:
+                        j += 1
                 output.write(lineFormat.format(len(s1), s1))
                 output.write(lineFormat.format(len(s2), s2))
                 i += 1
