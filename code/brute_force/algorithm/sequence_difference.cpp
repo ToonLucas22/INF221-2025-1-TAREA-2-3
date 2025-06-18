@@ -54,7 +54,7 @@ vector<pair<string, string>> diferenciasFB(const string& s, const string& t) {
     string common = lcsBrute(s, t);
     vector<pair<string, string>> diffs;
     int i = 0, j = 0;
-    for (char c : common) {
+    for (char &c : common) {
         int start_i = i, start_j = j;
         while (i < s.size() && s[i] != c) ++i;
         while (j < t.size() && t[j] != c) ++j;

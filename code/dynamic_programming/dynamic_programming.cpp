@@ -7,7 +7,7 @@
 using namespace std;
 
 int main() {
-    int N[] = {100, 10000};
+    int N[] = {10, 100, 10000};
     int E[] = {20, 50, 80};
     int C[] = {0, 1};
 
@@ -45,7 +45,7 @@ int main() {
                     sol = diferenciasDP(s1, s2);
                     t1 = clock();
                     execTime = (double(t1-t0)/CLOCKS_PER_SEC);
-                    measure << filename << " std::sort " << execTime << "\n";
+                    measure << filename << " " << to_string(i) << " " << execTime << "\n";
 
                     cout << "Algoritmo ejecutado exitosamente para "+filename+", par de strings #"+to_string(i)+"\n";
 
