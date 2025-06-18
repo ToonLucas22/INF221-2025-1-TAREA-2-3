@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "vector": "cpp",
+        "random": "cpp",
+        "limits": "cpp",
+        "algorithm": "cpp",
+        "string": "cpp",
+        "iostream": "cpp",
+        "iosfwd": "cpp"
+    }
+}

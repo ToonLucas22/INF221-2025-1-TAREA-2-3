@@ -1,0 +1,7 @@
+3
+6 ABCLGH
+6 AELFHR
+6 AGGJAB
+7 GZJZAMB
+16 Este_es_un_texto
+18 Este_es_otro_texto
