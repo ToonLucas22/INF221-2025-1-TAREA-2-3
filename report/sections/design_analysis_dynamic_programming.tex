@@ -1,20 +1,42 @@
 
 \epigraph{\textit{Dynamic programming is not about filling in tables. It's about smart recursion!}}{\citeauthor{algorithms_erickson}, \citeyear{algorithms_erickson} \cite{algorithms_erickson}}
 
-\begin{enumerate}[1)]
-    \item Describa la solución recursiva.
-    \item Escriba la relación de recurrencia, incluyendo condiciones y casos base.
-    \item Identifique subproblemas.
-    \item Defina estructura de datos a utilizar y especifique el orden de calculo que realiza su programa que utiliza programación dinámica. 
-\end{enumerate}
-
 \subsubsection{Descripción de la solución recursiva}
+
+La ecuación de la solución recursiva se da por:
+
+1 + LCS-Naive(S1(i-1), S2(j-1)), xi = yj
+
+max(LCS-Naive(S1, S2(j-1)), LCS-Naive(S1(i-1), S2)), xi != yj
+
+Además, se tienen los casos base de LCS-Naive = 0, $i = 0 \lor j = 0$.
 
 \subsubsection{Relación de recurrencia}
 
+Dado las llamadas recursivas, se tiene que la relación de recurrencia del algoritmo de fuerza bruta es lo siguiente:
+
+$T(n, m) = 1 + T(n-1, m-1), xn = xm$
+$T(n, m) = 1 + T(n-1, m) + T(n, m-1), xn \neq mn$
+
+Se puede comprobar que, promediando las cantidades de diferencias posibles entre dos strings de tamaño n y m, y presumiendo que cada cantidad de diferencias tiene igual probabilidad de ocurrir, el caso promedio de tiempo de ejecución del programa se da por:
+
+$T(n,m) = O(2^\frac{min(n,m)}{2}) + O(|n-m|) \in O(2^n)$
+
+Como dato aparte, es trivial demostrar que la complejidad espacial del algoritmo de fuerza bruta se da por $E(n) = O(1)$.
+
 \subsubsection{Identificación de subproblemas}
 
+Dado el análisis anterior, es evidente que para dos strings de tamaño n y m cualquiera, se deben resolver los siguientes subproblemas:
+
+xn = xm, resolver LCS(S1(n-1), S2(m-1)), es decir los substrings S1' que va desde 0 a n-1, y S2' que va desde 0 a m-1
+
+xn = xm, resolver LCS(S1, S2' y LCS(S1', S2), S1' siendo el substring que abarca desde 0 a n-1 y S2' siendo el substring que abarca desde 0 a m-1.
+
+Y esto se repite hasta llegar a los casos base. Entonces, esto puede llevarse a programación dinámica.
+
 \subsubsection{Estructura de datos y orden de cálculo}
+
+Para llevar el algoritmo a DP, se opta por utilizar un arreglo bidimensional de enteros, para almacenar las cantidades máximas de similitudes para cualquier par de substrings posibles de los dos strings de entrada. Se opta por calcular el DP en modalidad bottom-up, esto es, primero se llenan los casos bases, luego se empiezan a llenar las casillas del DP en un for doble partiendo desde i=0 y j=0. La razón por la que se optó hacerlo de esta forma es por la facilidad de demostrar que esta modalidad termina, pues los for de i y j van hasta n y m respectivamente, y podemos darnos el lujo de eliminar derechamente la recursión de nuestro algoritmo, permitiendo llenar el DP de forma iterativa. Esto no afecta el resultado, pues una casilla cualquiera dp[i][j] siempre se calcula en función de alguna de las anteriores cuando i y/o j son mayores a 0.
 
 \subsubsection{Algoritmo utilizando programación dinámica}
 
@@ -23,43 +45,52 @@
 \begin{algorithm}[H]
 
     \SetKwProg{myproc}{Procedure}{}{}
-    \SetKwFunction{AlgorithmName}{AlgorithmName}  % Cambia 'AlgorithmName' por el nombre del enfoque elegido
-    \SetKwFunction{AuxiliaryFunction}{AuxiliaryFunction}  % Función auxiliar de ejemplo
+    \SetKwFunction{LCSDP}{LCS-Bottom-Up}  % Cambia 'AlgorithmName' por el nombre del enfoque elegido
     
     \DontPrintSemicolon
     \footnotesize
 
     % Definición del algoritmo principal
-    \myproc{\AlgorithmName{S1, S2}}{
-    \uIf{S1 está vacía}{
-        \Return longitud de S2\;  % Return explícito si S1 está vacía
+    \myproc{\LCSDP{S1 = (x1, ..., xn), S2 = (y1, ..., ym}}{
+    dp[0][0] = 0
+    
+    for i = 1 to n do
+
+        dp[i][0] = 0
+
+    end
+    
+    for j = 1 to m do
+
+    [0][j] = 0
+
+    end
+
+    for i = 1 to n do
+
+    for j = 1 to m do
+
+    \uIf{xi = yj}{
+        dp[i][j] = 1 + dp[i-1][j-1]
     }
-    \uElseIf{S2 está vacía}{
-        \Return longitud de S1\;  % Return explícito si S2 está vacía
-    }
-    \uElseIf{S1[0] = S2[0]}{
-        \Return \AlgorithmName{S1[1:], S2[1:]}  % Llamada recursiva
-    }
-    \Else{
-        % Ejemplo de llamado a una función auxiliar
-        $costo \leftarrow \AuxiliaryFunction{S1, S2}$\;
-        \Return costo\;  % Retornar el valor calculado
-    }
+    \uElse{
+        dp[i][j] = max(dp[i][j-1], dp[i-1][j]
     }
 
-    % Definición de la función auxiliar
-    \myproc{\AuxiliaryFunction{S1, S2}}{
-    % Acciones o cálculos auxiliares
-    \uIf{S1 y S2 son similares}{
-        \Return algún valor o costo\;  % Retornar el valor calculado por la función auxiliar
+    end
+
+    end
+
+    end
+
+    \Return{dp[n][m]}
+
+    end
     }
-    \Else{
-        % Llamar de nuevo a la función principal
-        \Return \AlgorithmName{S1 modificado, S2}\;  % Llamada recursiva y retorno del resultado
-    }
-    }
-    \caption{Este es solo un ejemplo de cómo estructurar el pseudocódigo, con retornos explícitos y llamados a funciones.}
-    \label{alg:mi_algoritmo_2}
+
+    \caption{Implementación de LCS a la fuerza bruta, basado en \href{https://www.cubawiki.com.ar/images/1/1a/Lcs_tagliavini.pdf}{Algoritmos y Estructuras de Datos III - Práctica: Programación Dinámica, Guido Tagliavini Ponce, 03/09/2014}}
 \end{algorithm}
 
-Todo lo correspondiente a esta sección es, digamos, en ``\href{https://dle.rae.es/metáfora}{lapiz y papel}'', en el sentido de que no necesita de implementaciones ni resultados experimentales. 
+Es evidente que construir y llenar la tabla de DP de esta forma toman tiempo $\Theta(nm)$, y el resto es constante. Por lo tanto, el algoritmo de LCS en DP toma tiempo $\Theta(nm)$.
+
+En respecto a uso de memoria, debido a que hay que construir la tabla de DP dentro de la función, esto causa que el uso de memoria de la función se de por $E(n) = \Theta(nm)$, lo que hace particularmente desafiante computar este algoritmo en sistemas con baja memoria y/o para tamaños de string muy grandes.
